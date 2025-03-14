@@ -3,7 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Gate_In
+  - Item
+  - Correct_Item
+  - HP_Item
+  - Air_Item
+  - Direct_Item
+  - Small_Speed_Item
+  - Speed_Item
+  - Invisible_Item
   layers:
   - Default
   - TransparentFX
