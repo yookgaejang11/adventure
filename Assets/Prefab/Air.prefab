@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1105041376576656229}
   - component: {fileID: 8695131577333583150}
   m_Layer: 5
-  m_Name: Speed
-  m_TagString: Speed_Item
+  m_Name: Air
+  m_TagString: Air_Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InventoryImg: {fileID: 0}
-  Price: 50
+  Price: 0
   Weight: 2
 --- !u!1 &2922426153138655294
 GameObject:
@@ -170,4 +170,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC18D\uB3C4\n\uC99D\uAC00\n"
+  m_Text: "\uD22C\uBA85\uD654\n\uBB3C\uC57D"

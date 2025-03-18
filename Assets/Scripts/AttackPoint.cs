@@ -6,12 +6,12 @@ public class AttackPoint : MonoBehaviour
 {
     public int damage = 3;
     public bool isAttack = false;
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.gameObject.CompareTag("Enemy") && !isAttack)
+        if (other.gameObject.CompareTag("Enemy") && !isAttack)
         {
             isAttack = true;
-            collision.gameObject.GetComponent<Enemy>().OnDamage(damage);
+            other.gameObject.GetComponent<Enemy>().OnDamage(damage);
             isAttack = false;
         }
     }

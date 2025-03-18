@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+    public float jumpScale;
+    public bool isGrounded = false;
+
     public float airTime = 0;
-    public int airLevel = 1;
+    public int airLevel = 0;
     public GameObject weapon;
     public GameObject light_obj;
     public GameObject flashLight;
@@ -23,23 +27,28 @@ public class Player : MonoBehaviour
     Animator animator;
     public float speed = 5;
     public float rotateSpeed = 5;
-    CharacterController controller;
+    Rigidbody rigid;
     private void Awake()
     {
+        rigid = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        controller = GetComponent<CharacterController>();
         currentAir = maxAir;
         currentHp = maxHp;
     }
     private void Start()
     {
-        
+        airLevel = 0;
     }
     // Update is called once per frame
     void Update()
     {
-        Move();
-        
+        if (currentHp <= 0)
+        {
+            currentHp = 0;
+            isDie = true;
+            animator.SetBool("isDie", true);
+        }
+
         StartCoroutine(Attack());
         if(Input.GetKeyDown(KeyCode.Q) && onWeapon)
         {
@@ -55,9 +64,22 @@ public class Player : MonoBehaviour
             weapon.SetActive(true);
             onWeapon = true;
         }
-
+        Jump();
         AirDown();
-        
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
+    }
+
+    void Jump()
+    {
+        if(isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            isGrounded = false;
+            rigid.AddForce(Vector3.up * jumpScale, ForceMode.Impulse);
+        }
     }
     
     void AirDown()
@@ -77,9 +99,9 @@ public class Player : MonoBehaviour
 
         Vector3 dir = new Vector3(x_pos, 0,z_pos).normalized;
 
-        controller.Move(dir * speed * Time.deltaTime);
+        rigid.velocity = new Vector3(dir.x * speed, rigid.velocity.y, dir.z * speed);
 
-         if( dir != Vector3.zero )
+        if ( dir != Vector3.zero )
         {
             animator.SetBool("isWalk", true);
             Quaternion rot = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), rotateSpeed * Time.deltaTime);
@@ -90,7 +112,11 @@ public class Player : MonoBehaviour
             animator.SetBool("isWalk",false);
         }
 
-        
+         
+
+
+
+
     }
 
     IEnumerator Attack()
@@ -108,19 +134,14 @@ public class Player : MonoBehaviour
     {
         if(isDie) { return; }
         currentHp -= damage;
-        if(currentHp <= 0 )
-        {
-            currentHp = 0;
-            isDie = true;
-            animator.SetBool("isDie",true);
-        }
+        
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    private void OnCollisionEnter(Collision collision)
     {
-        if(hit.collider.gameObject.CompareTag("Gate_In"))
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            isGrounded = true;
         }
     }
 
@@ -130,7 +151,12 @@ public class Player : MonoBehaviour
         {
             Destroy(other.gameObject);
             inventory.SetItem(other.gameObject.GetComponent<Item>().InventoryImg);
-            
+        }
+
+        if (other.gameObject.CompareTag("Gate_In"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            airLevel += 1;
         }
     }
 

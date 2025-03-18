@@ -13,6 +13,7 @@ TagManager:
   - Small_Speed_Item
   - Speed_Item
   - Invisible_Item
+  - Ground
   layers:
   - Default
   - TransparentFX

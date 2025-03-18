@@ -7,7 +7,7 @@ public class FollowCamera : MonoBehaviour
     
     public Vector3 offset;
     public Transform target;
-    float smoothSpeed = 0.0125f;
+    float smoothSpeed = 5;
     
     void Start()
     {
@@ -19,9 +19,9 @@ public class FollowCamera : MonoBehaviour
     {
         Vector3 dir = offset + target.position;
 
-        Vector3 smoothspeed = Vector3.Lerp(transform.position, dir, smoothSpeed);   
+        Vector3 smoothspeed = Vector3.Lerp(transform.position, dir, smoothSpeed * Time.deltaTime);   
         transform.position = smoothspeed;
 
-        transform.LookAt(target.position);
+        transform.LookAt(target);
     }
 }
