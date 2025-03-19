@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -42,12 +43,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentHp <= 0)
-        {
-            currentHp = 0;
-            isDie = true;
-            animator.SetBool("isDie", true);
-        }
+        if(isDie) { return; }
 
         StartCoroutine(Attack());
         if(Input.GetKeyDown(KeyCode.Q) && onWeapon)
@@ -70,6 +66,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(isDie) { return; }   
         Move();
     }
 
@@ -134,6 +131,12 @@ public class Player : MonoBehaviour
     {
         if(isDie) { return; }
         currentHp -= damage;
+        if(currentHp <= 0 && !isDie)
+        {
+            isDie = true;
+            currentHp = 0;
+            animator.SetTrigger("isDie");
+        }
         
     }
 
@@ -142,6 +145,20 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+        }
+
+        if(collision.gameObject.CompareTag("Trap"))
+        {
+            Debug.Log("ss");
+            SetHp(currentHp);
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
         }
     }
 
