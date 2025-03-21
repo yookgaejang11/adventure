@@ -9,7 +9,7 @@ public class SpinningAxe : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rotateSpeed = Random.Range(1, 1.5f);
     }
 
     // Update is called once per frame

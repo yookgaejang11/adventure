@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        hp_Slider.value = player.currentHp / player.maxHp;
-        air_Slider.value = player .currentAir / player.maxAir;
+        hp_Slider.value = (float)player.currentHp / player.maxHp;
+        air_Slider.value = (float)player .currentAir / player.maxAir;
     }
 
     public static GameManager Instance
